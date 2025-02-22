@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<books>
+    <book code="101">
+        <bname>CPP</bname>
+        <qty>10</qty>
+        <price>250</price>
+    </book>
+
+    <book code="102">
+        <bname>PHP</bname>
+        <qty>20</qty>
+        <price>50</price>
+    </book>
+
+    <book code="103">
+        <bname>Java</bname>
+        <qty>30</qty>
+        <price>500</price>
+    </book>
+
+    <book code="104">
+        <bname>DBMS</bname>
+        <qty>15</qty>
+        <price>150</price>
+    </book>
+
+    <book code="105">
+        <bname>Python</bname>
+        <qty>35</qty>
+        <price>350</price>
+    </book>
+
+</books>
