@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kChat</title>
+    <link rel="icon" href="/public/images/th.png" type="image/png">
+    <link rel="stylesheet" href="/css/style.css">
+    <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"rel="stylesheet"/>
+</head>
+<body>
+  <div class="container">
+    <div class="div">Free Chat By kChat <a href="/about.html" target="_blank"><i class="ri-information-fill"></i></a></div>
+    <div class="usercount"></div>
+    
+  
+  <div class="messages">
+  </div>
+  <div class="input-container">
+      <input type="text" class="message-sent" placeholder="Type your message here">
+      <button class="btn">Send</button>
+  </div>
+</div>
+<br>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+
+var socket = io();
+let myUserId;
+const names = sessionStorage.getItem("user-name"); 
+const messageinp = document.querySelector(".message-sent");
+const btn = document.querySelector(".btn");
+const messages = document.querySelector(".messages");
+const audio = new Audio('/ting.mp3');
+const container = document.querySelector(".container");
+const countelement = document.querySelector(".usercount");
+
+// Send user-join event when the user joins
+socket.emit('user-join', names);
+
+// Listen for updated user count
+socket.on("user-count", (count) => {
+  // Update the user count excluding the current user
+  countelement.textContent = `Users Online: ${count}`;
+});
+
+// Send the message
+messageinp.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && messageinp.value.trim() !== "") {
+    sendMessage();
+  }
+});
+
+function sendMessage() {
+  const message = messageinp.value;
+  socket.emit('user-message', message);
+  displayMessage("You", message, true); // Display sent message
+  messageinp.value = ''; // Clear input field after sending message
+  container.scrollTop = container.scrollHeight;
+  focus()
+}
+
+socket.on("connect", () => {
+  myUserId = socket.id;
+});
+
+// Receive and display messages
+socket.on("message", (data) => {
+  const { userId, names, message } = data;
+  const isSentByUser = (userId === myUserId);
+  displayMessage(isSentByUser ? "You" : names, message, isSentByUser); // Display message
+  if (!isSentByUser) audio.play();
+});
+
+function displayMessage(username, message, isSentByUser) {
+  const p = document.createElement('p');
+  p.textContent = `${username}: ${message}`;
+  p.classList.add(isSentByUser ? 'right' : 'left'); // Add 'right' class if sent by user, 'left' otherwise
+  messages.appendChild(p);
+  p.focus(); // Focus on the latest message
+  messages.scrollTop = messages.scrollHeight; // Scroll to the latest message
+  messageinp.focus();
+}
+
+// Event listener for button click
+btn.addEventListener("click", () => {
+  if (messageinp.value.trim() !== "") sendMessage();
+});
+
+
+</script>
+</body>
+</html>

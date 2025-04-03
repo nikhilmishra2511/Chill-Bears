@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Your Name</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>Welcome to the Chat!</h1>
+  <form id="name-form">
+    <label for="name">Enter your name:</label>
+    <input type="text" id="name" name="name" placeholder="Your name" required>
+    <button type="submit" class="btn">Join Chat</button>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('name-form');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    if (name) {
+      // Store name in session storage for the chat page
+      sessionStorage.setItem('user-name', name);
+      // Redirect to the chat page
+      window.location.href = "/chat";
+    }
+  });
+</script>
+
+</body>
+</html>
